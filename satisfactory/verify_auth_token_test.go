@@ -130,7 +130,7 @@ func TestClient_VerifyAuthenticationToken_Integration_InvalidToken(t *testing.T)
 
 	// Adjust the expected error code and message according to your API's response
 	if apiErr.ErrorCode != "invalid_token" {
-		t.Errorf("Expected ErrorCode 'INVALID_TOKEN', got '%s'", apiErr.ErrorCode)
+		t.Errorf("Expected ErrorCode 'invalid_token', got '%s'", apiErr.ErrorCode)
 	}
 
 	if apiErr.ErrorMessage == "" {
