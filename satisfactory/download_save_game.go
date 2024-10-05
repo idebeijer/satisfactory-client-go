@@ -58,6 +58,10 @@ func (c *Client) DownloadSaveGame(ctx context.Context, saveName string) ([]byte,
 		}
 	}
 
+	if resp.StatusCode == 404 {
+		return nil, response, fmt.Errorf("save game '%s' not found", saveName)
+	}
+
 	if resp.StatusCode >= 400 {
 		return nil, response, fmt.Errorf("HTTP error: status code %d", resp.StatusCode)
 	}
