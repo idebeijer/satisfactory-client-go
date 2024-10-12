@@ -17,8 +17,7 @@ func main() {
 	client := satisfactory.NewClient("https://localhost:7777", nil, true)
 
 	password := os.Getenv("SF_PASSWD") // Replace with your password
-	_, _, err := client.PasswordLogin(ctx, "Administrator", password)
-	if err != nil {
+	if _, err := client.PasswordLogin(ctx, "Administrator", password); err != nil {
 		fmt.Println(err)
 		return
 	}

@@ -17,9 +17,17 @@ type PasswordLoginRequestData struct {
 	Password              string `json:"password"`
 }
 
-// PasswordLogin attempts to log in to the Dedicated Server using a password.
-// It sets the authentication token for the client if the login is successful.
-func (c *Client) PasswordLogin(ctx context.Context, minimumPrivilegeLevel, password string) (string, *Response, error) {
+// PasswordLogin performs a login to the server without a password.
+// The `minimumPrivilegeLevel` parameter specifies the required privilege level for the login.
+// Possible values for `minimumPrivilegeLevel` include:
+//   - `NotAuthenticated`
+//   - `Client`
+//   - `Administrator`
+//   - `InitialAdmin`
+//   - `APIToken`
+//
+// If the login is successful, the authentication token is set for the client.
+func (c *Client) PasswordLogin(ctx context.Context, minimumPrivilegeLevel, password string) (*Response, error) {
 	reqData := &PasswordLoginRequest{
 		Function: "PasswordLogin",
 		Data: PasswordLoginRequestData{
@@ -30,7 +38,7 @@ func (c *Client) PasswordLogin(ctx context.Context, minimumPrivilegeLevel, passw
 
 	req, err := c.NewRequest(ctx, http.MethodPost, "/api/v1/?function=PasswordLogin", reqData)
 	if err != nil {
-		return "", nil, err
+		return nil, err
 	}
 
 	var data struct {
@@ -39,10 +47,10 @@ func (c *Client) PasswordLogin(ctx context.Context, minimumPrivilegeLevel, passw
 
 	resp, err := c.Do(req, &data)
 	if err != nil {
-		return "", resp, err
+		return resp, err
 	}
 
 	c.SetAuthToken(data.AuthenticationToken)
 
-	return data.AuthenticationToken, resp, nil
+	return resp, nil
 }
