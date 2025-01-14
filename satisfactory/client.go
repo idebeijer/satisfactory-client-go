@@ -13,6 +13,8 @@ import (
 	"time"
 )
 
+const DefaultClientTimeout = 30 * time.Second
+
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
@@ -25,12 +27,16 @@ type Client struct {
 }
 
 func NewClient(baseURL string, logger *log.Logger, insecureSkipVerify bool) *Client {
+	return NewClientWithTimeout(baseURL, logger, insecureSkipVerify, DefaultClientTimeout)
+}
+
+func NewClientWithTimeout(baseURL string, logger *log.Logger, insecureSkipVerify bool, timeout time.Duration) *Client {
 	parsedURL, err := url.Parse(baseURL)
 	if err != nil {
 		return nil
 	}
 	httpClient := &http.Client{
-		Timeout: 30 * time.Second,
+		Timeout: timeout,
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: insecureSkipVerify,
