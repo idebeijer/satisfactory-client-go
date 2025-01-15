@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - skip: true
+
+release:
+  draft: true
+  prerelease: auto
+
+changelog:
+  use: github
+  groups:
+    - title: "Breaking changes"
+      regexp: '^.*?\w+(\(.+\))?!:\s?.+$'
+      order: 0
+    - title: "Features"
+      regexp: '^.*?feat(\(.+\))??!?:.+$'
+      order: 1
+    - title: "Bug fixes"
+      regexp: '^.*?fix(\(.+\))??!?:.+$'
+      order: 2
+    - title: "Documentation"
+      regexp: '^.*?docs(\(.+\))??!?:.+$'
+      order: 3
+    - title: "Build system"
+      regexp: '^.*?(build|ci)(\(.+\))??!?:.+$'
+      order: 4
+    - title: "Others"
+      order: 999
+  filters:
+    exclude:
+      - '^.*?(test|style)(\(.+\))??!?:.+$'
+      - 'initial commit'
