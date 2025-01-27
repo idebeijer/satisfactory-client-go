@@ -13,11 +13,6 @@ type GetAdvancedGameSettingsRequest struct {
 	Function string `json:"function"`
 }
 
-// GetAdvancedGameSettingsResponse represents the response from GetAdvancedGameSettings.
-type GetAdvancedGameSettingsResponse struct {
-	Data GetAdvancedGameSettingsResponseData `json:"data"`
-}
-
 // GetAdvancedGameSettingsResponseData contains the data from the GetAdvancedGameSettings response.
 type GetAdvancedGameSettingsResponseData struct {
 	CreativeModeEnabled  bool                 `json:"creativeModeEnabled"`
@@ -57,7 +52,9 @@ func (c *Client) GetAdvancedGameSettings(ctx context.Context) (*GetAdvancedGameS
 	}
 
 	// Unmarshal the response body with strict mode
-	var respData GetAdvancedGameSettingsResponse
+	var respData struct {
+		Data GetAdvancedGameSettingsResponseData `json:"data"`
+	}
 	decoder := json.NewDecoder(bytes.NewReader(resp.Body))
 	if err := decoder.Decode(&respData); err != nil {
 		return nil, resp, errors.New("failed to unmarshal JSON response: " + err.Error())

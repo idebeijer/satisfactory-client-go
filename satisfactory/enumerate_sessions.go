@@ -13,11 +13,6 @@ type EnumerateSessionsRequest struct {
 	Function string `json:"function"`
 }
 
-// EnumerateSessionsResponse represents the response from EnumerateSessions.
-type EnumerateSessionsResponse struct {
-	Data EnumerateSessionsResponseData `json:"data"`
-}
-
 // EnumerateSessionsResponseData contains the data from the EnumerateSessions response.
 type EnumerateSessionsResponseData struct {
 	Sessions            []SessionSaveStruct `json:"sessions"`
@@ -57,7 +52,9 @@ func (c *Client) EnumerateSessions(ctx context.Context) (*EnumerateSessionsRespo
 		return nil, nil, err
 	}
 
-	var respData EnumerateSessionsResponse
+	var respData struct {
+		Data EnumerateSessionsResponseData `json:"data"`
+	}
 	resp, err := c.Do(req, &respData)
 	if err != nil {
 		return nil, resp, err

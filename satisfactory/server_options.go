@@ -13,11 +13,6 @@ type GetServerOptionsRequest struct {
 	Function string `json:"function"`
 }
 
-// GetServerOptionsResponse represents the response from GetServerOptions.
-type GetServerOptionsResponse struct {
-	Data GetServerOptionsResponseData `json:"data"`
-}
-
 // GetServerOptionsResponseData contains the data from the GetServerOptions response.
 type GetServerOptionsResponseData struct {
 	ServerOptions        ServerOptions `json:"serverOptions"`
@@ -52,7 +47,9 @@ func (c *Client) GetServerOptions(ctx context.Context) (*GetServerOptionsRespons
 	}
 
 	// Unmarshal the response body with strict mode
-	var respData GetServerOptionsResponse
+	var respData struct {
+		Data GetServerOptionsResponseData `json:"data"`
+	}
 	decoder := json.NewDecoder(bytes.NewReader(resp.Body))
 	if err := decoder.Decode(&respData); err != nil {
 		return nil, resp, errors.New("failed to unmarshal JSON response: " + err.Error())
